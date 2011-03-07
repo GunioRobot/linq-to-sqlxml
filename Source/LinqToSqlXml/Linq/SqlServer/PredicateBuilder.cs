@@ -171,6 +171,11 @@ namespace LinqToSqlXml.SqlServer
                     return right;   
             }
 
+            if (expression is UnaryExpression)
+            {
+                return GetPropertyPath(((UnaryExpression)expression).Operand);
+            }
+
             if (expression is ConstantExpression)
             {
                 return null;
@@ -193,6 +198,11 @@ namespace LinqToSqlXml.SqlServer
                 var left = ReduceToDot(binaryExpression.Left);
                 var right = ReduceToDot(binaryExpression.Right);
                 return string.Format("{0} {1} {2}", left, op.Code, right);
+            }
+
+            if (expression is UnaryExpression)
+            {
+                return ReduceToDot(((UnaryExpression)expression).Operand);
             }
 
             if (expression is ConstantExpression)
@@ -218,6 +228,11 @@ namespace LinqToSqlXml.SqlServer
                     return true;
 
                 return false;
+            }
+
+            if (expression is UnaryExpression)
+            {
+                return CanReduceToDot(((UnaryExpression)expression).Operand);
             }
 
             if (expression is ConstantExpression)
@@ -284,6 +299,24 @@ namespace LinqToSqlXml.SqlServer
             string memberName = memberExpression.Member.Name;
 
             string current = string.Format("{0}", memberName);
+
+            
+            if (memberExpression.Type == typeof(bool)|| memberExpression.Type == typeof(bool?)) 
+                current += "/x:bool";
+
+            if (memberExpression.Type == typeof(string) )
+                current += "/x:str";
+
+            if (memberExpression.Type == typeof(DateTime) || memberExpression.Type == typeof(DateTime?)) 
+                current+= "/x:dt";
+
+            if (memberExpression.Type == typeof(int) || memberExpression.Type == typeof(int?) || memberExpression.Type.IsEnum)
+                current+= "/x:int";
+
+            if (memberExpression.Type == typeof(double) || memberExpression.Type == typeof(double?) || memberExpression.Type == typeof(decimal) || memberExpression.Type == typeof(decimal?)) 
+                current+= "/x:dec";
+
+
             string prev = "";
             if (memberExpression.Expression is MemberExpression)
                 prev = BuildPredicateMemberAccessReq(memberExpression.Expression) +"/" ;

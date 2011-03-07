@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
+using System.Xml;
 
 namespace LinqToSqlXml.SqlServer
 {
@@ -44,13 +45,13 @@ namespace LinqToSqlXml.SqlServer
         public static string BuildLiteral(object value)
         {
             if (value is string)
-                return "\"" + DocumentSerializer.SerializeString((string)value) + "\"";
+                return "\"" + SerializeString((string)value) + "\"";
             if (value is int)
-                return string.Format("xs:int({0})", DocumentSerializer.SerializeDecimal((int)value));
+                return string.Format("xs:int({0})", SerializeDecimal((int)value));
             if (value is decimal)
-                return string.Format("xs:decimal({0})", DocumentSerializer.SerializeDecimal((decimal)value));
+                return string.Format("xs:decimal({0})", SerializeDecimal((decimal)value));
             if (value is DateTime)
-                return string.Format("xs:dateTime({0})", DocumentSerializer.SerializeDateTime((DateTime)value));
+                return string.Format("xs:dateTime({0})", SerializeDateTime((DateTime)value));
             if (value is bool)
                 if ((bool)value)
                     return XQueryMapping.xsTrue;
@@ -58,6 +59,43 @@ namespace LinqToSqlXml.SqlServer
                     return XQueryMapping.xsFalse;
 
             return value.ToString();
+        }
+
+
+
+        public static string SerializeDateTime(DateTime value)
+        {
+            return XmlConvert.ToString(value, XmlDateTimeSerializationMode.Local);
+        }
+
+        public static string SerializeInt(int value)
+        {
+            return XmlConvert.ToString(value);
+        }
+
+        public static string SerializeDouble(double value)
+        {
+            return XmlConvert.ToString(value);
+        }
+
+        public static string SerializeDecimal(decimal value)
+        {
+            return XmlConvert.ToString(value);
+        }
+
+        public static string SerializeBool(bool value)
+        {
+            return XmlConvert.ToString(value);
+        }
+
+        public static string SerializeGuid(Guid value)
+        {
+            return XmlConvert.ToString(value);
+        }
+
+        public static string SerializeString(string value)
+        {
+            return value;
         }
     }
 }

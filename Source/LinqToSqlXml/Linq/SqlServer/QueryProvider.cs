@@ -56,8 +56,7 @@ namespace LinqToSqlXml
             var sql = string.Format(@"
 select {0} Id,{1} 
 from Documents 
-where CollectionName = '{2}'
-{3} 
+where CollectionName = '{2}' {3} 
 {4}", 
 queryBuilder.limit, 
 queryBuilder.documentDataSelector, 

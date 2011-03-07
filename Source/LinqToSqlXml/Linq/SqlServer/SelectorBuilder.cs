@@ -153,7 +153,7 @@ namespace LinqToSqlXml.SqlServer
             if (memberExpression.Member.DeclaringType == typeof(DateTime))
             {
                 if (memberName == "Now")
-                    return string.Format("xs:dateTime(\"{0}\")", DocumentSerializer.SerializeDateTime(DateTime.Now));
+                    return string.Format("xs:dateTime(\"{0}\")", XQueryMapping.SerializeDateTime(DateTime.Now));
             }
 
             string result = BuildSelectorMemberAccessRec(expression);

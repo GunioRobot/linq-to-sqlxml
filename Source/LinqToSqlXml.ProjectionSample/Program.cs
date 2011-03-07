@@ -25,37 +25,40 @@ namespace ProjectionSample
             var ctx = new DocumentContext("main");
             ctx.EnsureDatabaseExists();
 
-            for (int i = 0; i < 10000; i++)
-            {
+    //        for (int i = 0; i < 10000; i++)
+    //        {
 
-            }
+    //        }
 
 
-            var query = (from order in ctx.GetCollection<Order>().AsQueryable().OfType<Order>()
-                                            where order.OrderTotal > 0
-                                            where order.ShippingDate != null
-                                            where order.ShippingAddress.Line1 != "aa" && order.ShippingAddress.Line1 != "bb"
-                                            where order.ShippingAddress is Address
-                                            //select order
-                                            select new 
-                                                       {
-                                                           OrderTotal = order.OrderTotal,
-                                                           CustomerId = order.CustomerId,
-                                                           OrderDetails =
-                                                               order.OrderDetails.Select(
-                                                                   d =>
-                                                                   new 
-                                                                       {
-                                                                           LineTotal = d.ItemPrice * d.Quantity
-                                                                       }),
-                                                       }
-                                                       ).Take(100);
+            var query = (
+                from order in ctx.GetCollection<Order>().AsQueryable()
+                where order.OrderTotal > 0
+                where order.ShippingDate != null
+                where order.ShippingAddress.Line1 != "foo" && order.ShippingAddress.Line1 != "bar"
+                where order.Status == OrderStatus.Confirmed
+                select order
+                ).Take(100);
+
+            //select new 
+            //           {
+            //               OrderTotal = order.OrderTotal,
+            //               CustomerId = order.CustomerId,
+            //               OrderDetails =
+            //                   order.OrderDetails.Select(
+            //                       d =>
+            //                       new 
+            //                           {
+            //                               LineTotal = d.ItemPrice * d.Quantity
+            //                           }),
+            //           }
+            //           ).Take(100);
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
             var result = query.ToList();
             sw.Stop();
-            
+
 
             foreach (var order in result)
             {
@@ -66,7 +69,7 @@ namespace ProjectionSample
             Console.ReadLine();
             return;
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 2000; i++)
             {
                 Console.WriteLine(i);
                 var someCompany = new Customer
@@ -89,35 +92,24 @@ namespace ProjectionSample
                                            CustomerId = Guid.NewGuid(),
                                            OrderDate = DateTime.Now,
                                            ShippingDate = DateTime.Now,
-                                           OrderDetails = new List<OrderDetail>
-                                                              {
-                                                                  new OrderDetail
-                                                                      {
-                                                                          ItemPrice = 123,
-                                                                          ProductNo = "banan",
-                                                                          Quantity = 432
-                                                                      },
-                                                                      new OrderDetail
-                                                                      {
-                                                                          ItemPrice = 123,
-                                                                          ProductNo = "äpple",
-                                                                          Quantity = 432
-                                                                      },
-                                                                      new OrderDetail
-                                                                      {
-                                                                          ItemPrice = 123,
-                                                                          ProductNo = "gurka",
-                                                                          Quantity = 432
-                                                                      },
-                                                              },
+                                           OrderDetails = new List<OrderDetail>()                                                              ,
                                            ShippingAddress = new Address
                                                                  {
-                                                                     City = "gdfgdf",
-                                                                     Line1 = "dfgdgdfgd",
-                                                                     ZipCode = "gdfgdfgd"
+                                                                     City = "a",
+                                                                     Line1 = "b",
+                                                                     ZipCode = "c"
                                                                  },
                                            Status = OrderStatus.Shipped,
                                        };
+                for (int j = 0; j < i / 10; j++)
+                {
+                    someOrder.OrderDetails.Add(new OrderDetail
+                    {
+                        ItemPrice = i,
+                        ProductNo = "x" + i,
+                        Quantity = i,
+                    });
+                }
 
                 ctx.GetCollection<Order>().Add(someOrder);
                 //var result = DocumentSerializer.Serialize(specialOrder);
@@ -143,7 +135,7 @@ namespace ProjectionSample
                 
             }
             ctx.SaveChanges();
-            Console.ReadLine();
+        //    Console.ReadLine();
         }
     }
 

@@ -25,7 +25,7 @@ namespace LinqToSqlXml.SqlServer
             get
             {
                 if (wherepredicate != "")
-                    return string.Format(" and (documentdata.exist('/document[{0}]')) = 1", wherepredicate);
+                    return string.Format(" and (documentdata.exist('declare namespace x = \"urn:LinqToSqlXml\";\r\n\r\n/x:document[\r\n\r\n{0}\r\n\r\n]')) = 1", wherepredicate);
                 else
                     return "";
             }
