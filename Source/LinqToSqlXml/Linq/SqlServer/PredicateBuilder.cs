@@ -214,8 +214,7 @@ namespace LinqToSqlXml.SqlServer
             var binaryExpression = expression as BinaryExpression;
             if (binaryExpression != null)
             {
-                var op = XQueryMapping.Operators[expression.NodeType];
-                if (op.IsBool && CanReduceToDot(binaryExpression.Left) && CanReduceToDot(binaryExpression.Right))
+                if (CanReduceToDot(binaryExpression.Left) && CanReduceToDot(binaryExpression.Right))
                     return true;
 
                 return false;
