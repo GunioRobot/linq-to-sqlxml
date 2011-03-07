@@ -86,7 +86,9 @@ namespace LinqToSqlXml
 		
 		private string _CollectionName;
 		
-		private System.Xml.Linq.XElement _DocumentData;
+		private System.Xml.Linq.XElement _XmlIndex;
+		
+		private string _JsonData;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -98,8 +100,10 @@ namespace LinqToSqlXml
     partial void OnDbNameChanged();
     partial void OnCollectionNameChanging(string value);
     partial void OnCollectionNameChanged();
-    partial void OnDocumentDataChanging(System.Xml.Linq.XElement value);
-    partial void OnDocumentDataChanged();
+    partial void OnXmlIndexChanging(System.Xml.Linq.XElement value);
+    partial void OnXmlIndexChanged();
+    partial void OnJsonDataChanging(string value);
+    partial void OnJsonDataChanged();
     #endregion
 		
 		public Document()
@@ -167,22 +171,42 @@ namespace LinqToSqlXml
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentData", DbType="Xml NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public System.Xml.Linq.XElement DocumentData
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_XmlIndex", DbType="Xml NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public System.Xml.Linq.XElement XmlIndex
 		{
 			get
 			{
-				return this._DocumentData;
+				return this._XmlIndex;
 			}
 			set
 			{
-				if ((this._DocumentData != value))
+				if ((this._XmlIndex != value))
 				{
-					this.OnDocumentDataChanging(value);
+					this.OnXmlIndexChanging(value);
 					this.SendPropertyChanging();
-					this._DocumentData = value;
-					this.SendPropertyChanged("DocumentData");
-					this.OnDocumentDataChanged();
+					this._XmlIndex = value;
+					this.SendPropertyChanged("XmlIndex");
+					this.OnXmlIndexChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JsonData", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string JsonData
+		{
+			get
+			{
+				return this._JsonData;
+			}
+			set
+			{
+				if ((this._JsonData != value))
+				{
+					this.OnJsonDataChanging(value);
+					this.SendPropertyChanging();
+					this._JsonData = value;
+					this.SendPropertyChanged("JsonData");
+					this.OnJsonDataChanged();
 				}
 			}
 		}

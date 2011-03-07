@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using LinqToSqlXml;
 
 namespace LinqToSqlXml.Serializer.Tests
 {
@@ -67,17 +68,20 @@ namespace LinqToSqlXml.Serializer.Tests
             this.Id = Guid.NewGuid();
         }
 
+        [Indexed]
         public DateTime OrderDate { get; set; }
         public DateTime? ShippingDate { get; set; }
         public Guid CustomerId { get; set; }
         public Address ShippingAddress { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
+        [Indexed]
         public decimal OrderTotal
         {
             get { return OrderDetails.Sum(d => d.Quantity * d.ItemPrice); }
         }
 
+        [Indexed]
         public OrderStatus Status { get; set; }
     }
 

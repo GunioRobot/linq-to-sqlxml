@@ -47,11 +47,11 @@ namespace LinqToSqlXml.SqlServer
             if (value is string)
                 return "\"" + SerializeString((string)value) + "\"";
             if (value is int)
-                return string.Format("xs:int({0})", SerializeDecimal((int)value));
+                return string.Format("{0}", SerializeDecimal((int)value));
             if (value is decimal)
-                return string.Format("xs:decimal({0})", SerializeDecimal((decimal)value));
+                return string.Format("{0}", SerializeDecimal((decimal)value));
             if (value is DateTime)
-                return string.Format("xs:dateTime({0})", SerializeDateTime((DateTime)value));
+                return string.Format("xs:dateTime(\"{0}\")", SerializeDateTime((DateTime)value));
             if (value is bool)
                 if ((bool)value)
                     return XQueryMapping.xsTrue;

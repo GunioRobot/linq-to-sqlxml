@@ -9,12 +9,12 @@ namespace LinqToSqlXml.SqlServer
 {
     public partial class QueryBuilder : ExpressionVisitor
     {
-        private SelectorBuilder selectorBuilder = new SelectorBuilder();
+     //   private SelectorBuilder selectorBuilder = new SelectorBuilder();
         private PredicateBuilder predicateBuilder = new PredicateBuilder();
         public string limit = "";
         public string orderby = "";
         private string wherepredicate = "";
-        public string documentDataSelector = "DocumentData"; //just the column by default
+        //public string documentDataSelector = "DocumentData"; //just the column by default
 
         public QueryBuilder()
         {
@@ -25,7 +25,7 @@ namespace LinqToSqlXml.SqlServer
             get
             {
                 if (wherepredicate != "")
-                    return string.Format(" and (documentdata.exist('declare namespace x = \"urn:LinqToSqlXml\";\r\n\r\n/x:document[\r\n\r\n{0}\r\n\r\n]')) = 1", wherepredicate);
+                    return string.Format(" and (XmlIndex.exist('declare namespace x = \"urn:LinqToSqlXml\";\r\n\r\n/x:document[\r\n\r\n{0}\r\n\r\n]')) = 1", wherepredicate);
                 else
                     return "";
             }
@@ -54,7 +54,7 @@ namespace LinqToSqlXml.SqlServer
                         TranslateToTake(node);
                         break;
                     case "Select":
-                        documentDataSelector = selectorBuilder.TranslateToProjection(node);
+                      //  documentDataSelector = selectorBuilder.TranslateToProjection(node);
                         break;
                     default:
                         throw new NotSupportedException(string.Format("Method {0} is not yet supported",
@@ -93,7 +93,7 @@ namespace LinqToSqlXml.SqlServer
         private string BuildOrderByStart(Expression expression)
         {
             string path = BuildOrderBy(expression);
-            return string.Format("documentdata.value('(({0})[1])','nvarchar(MAX)')", path);
+            return string.Format("XmlIndex.value('(({0})[1])','nvarchar(MAX)')", path);
         }
 
         private string BuildOrderBy(Expression expression)

@@ -25,34 +25,13 @@ namespace ProjectionSample
             var ctx = new DocumentContext("main");
             ctx.EnsureDatabaseExists();
 
-    //        for (int i = 0; i < 10000; i++)
-    //        {
-
-    //        }
-
-
             var query = (
                 from order in ctx.GetCollection<Order>().AsQueryable()
                 where order.OrderTotal > 0
-                where order.ShippingDate != null
-                where order.ShippingAddress.Line1 != "foo" && order.ShippingAddress.Line1 != "bar"
-                where order.Status == OrderStatus.Confirmed
+                where order.OrderDate < DateTime.Now
+                where order.Status == OrderStatus.Shipped
                 select order
                 ).Take(100);
-
-            //select new 
-            //           {
-            //               OrderTotal = order.OrderTotal,
-            //               CustomerId = order.CustomerId,
-            //               OrderDetails =
-            //                   order.OrderDetails.Select(
-            //                       d =>
-            //                       new 
-            //                           {
-            //                               LineTotal = d.ItemPrice * d.Quantity
-            //                           }),
-            //           }
-            //           ).Take(100);
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -157,7 +136,10 @@ namespace ProjectionSample
             this.Id = Guid.NewGuid();
         }
 
+        [Indexed]
         public string Name { get; set; }
+
+        [Indexed]
         public Address Address { get; set; }
 
         public Order NewOrder()
@@ -179,17 +161,20 @@ namespace ProjectionSample
             this.Id = Guid.NewGuid();
         }
 
+        [Indexed]
         public DateTime OrderDate { get; set; }
         public DateTime? ShippingDate { get; set; }
         public Guid CustomerId { get; set; }
         public Address ShippingAddress { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
+        [Indexed]
         public decimal OrderTotal
         {
             get { return OrderDetails.Sum(d => d.Quantity * d.ItemPrice); }
         }
 
+        [Indexed]
         public OrderStatus Status { get; set; }
     }
 
@@ -210,11 +195,14 @@ namespace ProjectionSample
 
     public class Address
     {
+        [Indexed]
         public string Line1 { get; set; }
         public string Line2 { get; set; }
         public string Line3 { get; set; }
         public string State { get; set; }
+        [Indexed]
         public string City { get; set; }
+        [Indexed]
         public string ZipCode { get; set; }
     }
 }

@@ -83,6 +83,9 @@ namespace LinqToSqlXml
             PropertyInfo[] properties = itemType.GetProperties();
             foreach (PropertyInfo property in properties)
             {
+                if (!property.IsDefined(typeof(IndexedAttribute),true))
+                    continue;
+
                 var propertyTag = new XElement(property.Name);
                 object propertyValue = property.GetValue(value, null);
 

@@ -56,10 +56,10 @@ namespace LinqToSqlXml
                 documentId = Guid.NewGuid();
             }
 
-
             var doc = new Document();
             doc.Id = documentId;
-            doc.DocumentData = DocumentSerializer.Serialize(item);
+            doc.XmlIndex = DocumentSerializer.Serialize(item);
+            doc.JsonData = Newtonsoft.Json.JsonConvert.SerializeObject(item);
             doc.CollectionName = collectionName;
             doc.DbName = owner.DbInstance;
 

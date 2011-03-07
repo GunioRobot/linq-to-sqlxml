@@ -43,8 +43,8 @@ namespace LinqToSqlXml
         private static IEnumerable<TResult> DocumentEnumerator<TResult>(IEnumerable<Document> documents)
         {
             return documents
-                .Select(document => document.DocumentData)
-                .Select(xml => (TResult) DocumentDeserializer.Deserialize(xml,typeof(TResult)))
+                .Select(document => document.JsonData)
+                .Select(json => Newtonsoft.Json.JsonConvert.DeserializeObject<TResult>(json))
                 .Where(result => result != null);
         }
 
@@ -54,12 +54,12 @@ namespace LinqToSqlXml
             queryBuilder.Visit(expression);
 
             var sql = string.Format(@"
-select {0} Id,{1} 
+select {0} Id,JsonData 
 from Documents 
 where CollectionName = '{2}' {3} 
 {4}", 
 queryBuilder.limit, 
-queryBuilder.documentDataSelector, 
+"", 
 documentCollection.CollectionName, 
 queryBuilder.Where, 
 queryBuilder.orderby);
