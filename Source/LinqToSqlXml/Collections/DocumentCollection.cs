@@ -16,9 +16,9 @@ namespace LinqToSqlXml
             get { return collectionName; }
         }
 
-        internal IEnumerable<Document> ExecuteQuery(string query)
+        internal IEnumerable<ReadDocument> ExecuteQuery(string query)
         {
-            return owner.DB.ExecuteQuery<Document>(query);
+            return Database.ExecuteReader(this.owner.DB.Connection,query);
         }
     }
 

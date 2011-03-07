@@ -28,15 +28,17 @@ namespace ProjectionSample
             var query = (
                 from order in ctx.GetCollection<Order>().AsQueryable()
                 where order.OrderTotal > 0
-                where order.OrderDate < DateTime.Now
-                where order.Status == OrderStatus.Shipped
+                //where order.OrderDate < DateTime.Now
+                //where order.Status == OrderStatus.Shipped
                 select order
-                ).Take(100);
+                ).Take(400);
 
+            var x = query.ToList();
             Stopwatch sw = new Stopwatch();
             sw.Start();
             var result = query.ToList();
             sw.Stop();
+            
 
 
             foreach (var order in result)
@@ -48,7 +50,7 @@ namespace ProjectionSample
             Console.ReadLine();
             return;
 
-            for (int i = 0; i < 2000; i++)
+            for (int i = 0; i < 5000; i++)
             {
                 Console.WriteLine(i);
                 var someCompany = new Customer

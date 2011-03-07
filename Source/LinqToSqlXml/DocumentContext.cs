@@ -24,6 +24,7 @@
         {
             if (!db.DatabaseExists())
                 db.CreateDatabase();
+            db.Connection.Open();
         }
 
         public DocumentCollection<T> GetCollection<T>() where T : class

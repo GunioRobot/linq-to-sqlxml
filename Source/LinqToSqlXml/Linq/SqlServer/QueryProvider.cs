@@ -40,10 +40,10 @@ namespace LinqToSqlXml
 
         #endregion
 
-        private static IEnumerable<TResult> DocumentEnumerator<TResult>(IEnumerable<Document> documents)
-        {
+        private static IEnumerable<TResult> DocumentEnumerator<TResult>(IEnumerable<ReadDocument> documents)
+        {            
             return documents
-                .Select(document => document.JsonData)
+                .Select(document => document.Json)
                 .Select(json => Newtonsoft.Json.JsonConvert.DeserializeObject<TResult>(json))
                 .Where(result => result != null);
         }
@@ -64,7 +64,8 @@ documentCollection.CollectionName,
 queryBuilder.Where, 
 queryBuilder.orderby);
 
-            IEnumerable<Document> result = documentCollection.ExecuteQuery(sql);
+
+            IEnumerable<ReadDocument> result = documentCollection.ExecuteQuery(sql);
             return DocumentEnumerator<TResult>(result);
         }
     }

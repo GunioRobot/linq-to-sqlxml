@@ -152,6 +152,7 @@ namespace LinqToSqlXml.SqlServer
             }
             else
             {
+                reducePropertyPath = null;
                 string left = BuildPredicate(binaryExpression.Left);
                 string right = BuildPredicate(binaryExpression.Right);
                 return string.Format("({0} {1} {2})", left, op.Code, right);
@@ -212,6 +213,10 @@ namespace LinqToSqlXml.SqlServer
 
             if (expression is MemberExpression)
             {
+                var memberExpression = expression as MemberExpression;
+                if (memberExpression.Member.DeclaringType == typeof(DateTime))
+                    return XQueryMapping.BuildLiteral(DateTime.Now);    
+
                 return ".";
             }
 
@@ -240,6 +245,10 @@ namespace LinqToSqlXml.SqlServer
 
             if (expression is MemberExpression)
             {
+                var memberExpression = expression as MemberExpression;
+                if (memberExpression.Member.DeclaringType == typeof(DateTime))
+                    return true;
+
                 string currentPropertyPath = GetPropertyPath(expression);
                 if (reducePropertyPath == null)
                     reducePropertyPath = currentPropertyPath;
@@ -252,6 +261,7 @@ namespace LinqToSqlXml.SqlServer
 
             return false;
         }
+
 
         private string GetPropertyPath(Expression expression)
         {
