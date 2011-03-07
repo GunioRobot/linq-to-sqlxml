@@ -133,33 +133,135 @@ namespace LinqToSqlXml.SqlServer
         private string BuildPredicateBinaryExpression(Expression expression)
         {
             var binaryExpression = expression as BinaryExpression;
-            string op = XQueryMapping.Operators[expression.NodeType];
-            string left = BuildPredicate(binaryExpression.Left);
+            var op = XQueryMapping.Operators[expression.NodeType];
 
 
-            var rightAsUnary = binaryExpression.Right as UnaryExpression;
-            ConstantExpression rightAsConstant = rightAsUnary != null
-                                                     ? rightAsUnary.Operand as ConstantExpression
-                                                     : null;
-            if (rightAsConstant != null && rightAsConstant.Value == null)
+            var rightIsNull = IsConstantNull(binaryExpression.Right);
+
+            if (rightIsNull)
             {
-                return string.Format("{0}[@type{1}\"null\"]", left, op);
+                string left = GetPropertyPath(binaryExpression.Left);
+                return string.Format("{0}/@type[.{1}\"null\"]", left, op.Code);
+            }
+            else if (op.IsBool && CanReduceToDot(binaryExpression))
+            {
+                string dot = ReduceToDot(binaryExpression);
+                string path = ReduceToDotPath(binaryExpression);
+                reducePropertyPath = null;
+                return string.Format("{0}[{1}]", path, dot);
             }
             else
             {
+                string left = BuildPredicate(binaryExpression.Left);
                 string right = BuildPredicate(binaryExpression.Right);
-                return string.Format("({0} {1} {2})", left, op, right);
+                return string.Format("({0} {1} {2})", left, op.Code, right);
             }
+        }
+
+        private string ReduceToDotPath(Expression expression)
+        {
+            var binaryExpression = expression as BinaryExpression;
+            if (binaryExpression != null)
+            {
+                var op = XQueryMapping.Operators[expression.NodeType];
+                var left = ReduceToDotPath(binaryExpression.Left);
+                if (left != null)
+                    return left;
+                var right = ReduceToDotPath(binaryExpression.Right);
+                    return right;   
+            }
+
+            if (expression is ConstantExpression)
+            {
+                return null;
+            }
+
+            if (expression is MemberExpression)
+            {
+                return GetPropertyPath(expression);
+            }
+
+            throw new NotSupportedException();
+        }
+
+        private string ReduceToDot(Expression expression)
+        {
+            var binaryExpression = expression as BinaryExpression;
+            if (binaryExpression != null)
+            {
+                var op = XQueryMapping.Operators[expression.NodeType];
+                var left = ReduceToDot(binaryExpression.Left);
+                var right = ReduceToDot(binaryExpression.Right);
+                return string.Format("{0} {1} {2}", left, op.Code, right);
+            }
+
+            if (expression is ConstantExpression)
+            {
+                return BuildPredicateConstant(expression);
+            }
+
+            if (expression is MemberExpression)
+            {
+                return ".";
+            }
+
+            throw new NotSupportedException();
+        }
+
+        private string reducePropertyPath = null;
+        private bool CanReduceToDot(Expression expression)
+        {
+            var binaryExpression = expression as BinaryExpression;
+            if (binaryExpression != null)
+            {
+                var op = XQueryMapping.Operators[expression.NodeType];
+                if (op.IsBool && CanReduceToDot(binaryExpression.Left) && CanReduceToDot(binaryExpression.Right))
+                    return true;
+
+                return false;
+            }
+
+            if (expression is ConstantExpression)
+                return true;
+
+            if (expression is MemberExpression)
+            {
+                string currentPropertyPath = GetPropertyPath(expression);
+                if (reducePropertyPath == null)
+                    reducePropertyPath = currentPropertyPath;
+
+                if (currentPropertyPath == reducePropertyPath)
+                    return true;
+                else
+                    return false;
+            }
+
+            return false;
+        }
+
+        private string GetPropertyPath(Expression expression)
+        {
+            return BuildPredicateMemberAccessReq(expression);
+        }
+
+        private static bool IsConstantNull(Expression expression)
+        {
+            var rightAsUnary = expression as UnaryExpression;
+            ConstantExpression rightAsConstant = rightAsUnary != null
+                                                     ? rightAsUnary.Operand as ConstantExpression
+                                                     : null;
+            var rightIsNull = rightAsConstant != null && rightAsConstant.Value == null;
+            return rightIsNull;
         }
 
         private string BuildPredicateTypeIs(Expression expression)
         {
             var typeBinaryExpression = expression as TypeBinaryExpression;
-            string left = BuildPredicate(typeBinaryExpression.Expression);
+            string left = GetPropertyPath(typeBinaryExpression.Expression);
             string typeName = typeBinaryExpression.TypeOperand.SerializedName();
 
             //check if type attrib equals typename OR if typename exists in metadata type array
-            string query = string.Format("{0}[(@type=\"{1}\" or __meta[type[. = \"{1}\"]])]",left, typeName);
+            string query = string.Format("{0}[(@type[.=\"{1}\"] or __meta[type[. = \"{1}\"]])]",left, typeName);
             return query;
         }
 
@@ -206,7 +308,7 @@ namespace LinqToSqlXml.SqlServer
             string typeName = ofType.SerializedName();
 
             //check if type attrib equals typename OR if typename exists in metadata type array
-            string query = string.Format("(@type=\"{0}\" or __meta[type[. = \"{0}\"]])", typeName);
+            string query = string.Format("(@type[.=\"{0}\"] or __meta[type[. = \"{0}\"]])", typeName);
             return query;
         }
     }

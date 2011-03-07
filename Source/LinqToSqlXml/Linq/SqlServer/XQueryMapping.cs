@@ -6,23 +6,29 @@ using System.Linq.Expressions;
 
 namespace LinqToSqlXml.SqlServer
 {
+    public class OperatorInfo
+    {
+        public string Code { get; set; }
+        public bool IsBool { get; set; }
+    }
     public static class XQueryMapping
     {
-        public static readonly Dictionary<ExpressionType, string> Operators = new Dictionary<ExpressionType, string>
+        public static readonly Dictionary<ExpressionType, OperatorInfo> Operators = new Dictionary<ExpressionType, OperatorInfo>
                 {
-                    {ExpressionType.AndAlso, "and"},
-                    {ExpressionType.OrElse, "or"},
-                    {ExpressionType.NotEqual, "!="},
-                    {ExpressionType.LessThan, "<"},
-                    {ExpressionType.LessThanOrEqual, "<="},
-                    {ExpressionType.GreaterThan, ">"},
-                    {ExpressionType.GreaterThanOrEqual, ">="},
-                    {ExpressionType.Equal, "="},
-                    {ExpressionType.Add, "+"},
-                    {ExpressionType.Subtract, "-"},
-                    {ExpressionType.Divide, "/"},
-                    {ExpressionType.Multiply, "*"},
+                    {ExpressionType.AndAlso, new OperatorInfo{Code = "and" , IsBool = true }},
+                    {ExpressionType.OrElse, new OperatorInfo{Code = "or" , IsBool = true }},
+                    {ExpressionType.NotEqual, new OperatorInfo{Code = "!=" , IsBool = true }},
+                    {ExpressionType.LessThan, new OperatorInfo{Code = "<" , IsBool = true }},
+                    {ExpressionType.LessThanOrEqual, new OperatorInfo{Code = "<=" , IsBool = true }},
+                    {ExpressionType.GreaterThan, new OperatorInfo{Code = ">" , IsBool = true }},
+                    {ExpressionType.GreaterThanOrEqual, new OperatorInfo{Code = ">=" , IsBool = true }},
+                    {ExpressionType.Equal, new OperatorInfo{Code = "=" , IsBool = true }},
+                    {ExpressionType.Add, new OperatorInfo{Code = "+" , IsBool = false }},
+                    {ExpressionType.Subtract, new OperatorInfo{Code = "-" , IsBool = false }},
+                    {ExpressionType.Divide, new OperatorInfo{Code = "/" , IsBool = false }},
+                    {ExpressionType.Multiply, new OperatorInfo{Code = "*" , IsBool = false }},
                 };
+
 
         public static readonly Dictionary<string, string> Functions = new Dictionary<string, string>
                                                                            {

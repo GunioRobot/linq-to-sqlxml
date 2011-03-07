@@ -23,7 +23,7 @@ namespace LinqToSqlXml
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DocumentDB")]
-	internal partial class DocumentDataContext : System.Data.Linq.DataContext
+	public partial class DocumentDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();

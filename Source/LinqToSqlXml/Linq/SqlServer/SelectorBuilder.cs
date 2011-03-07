@@ -124,7 +124,7 @@ namespace LinqToSqlXml.SqlServer
         private string BuildSelectorBinaryExpression(Expression expression)
         {
             var binaryExpression = expression as BinaryExpression;
-            string op = XQueryMapping.Operators[expression.NodeType];
+            var op = XQueryMapping.Operators[expression.NodeType];
             string left = BuildSelector(binaryExpression.Left);
 
             var rightAsUnary = binaryExpression.Right as UnaryExpression;
@@ -133,11 +133,11 @@ namespace LinqToSqlXml.SqlServer
                                                      : null;
             if (rightAsConstant != null && rightAsConstant.Value == null)
             {
-                return string.Format("{0}[@type{1}\"null\"]", left, op);
+                return string.Format("{0}[@type{1}\"null\"]", left, op.Code);
             }
 
             string right = BuildSelector(binaryExpression.Right);
-            return string.Format("({0} {1} {2})", left, op, right);
+            return string.Format("({0} {1} {2})", left, op.Code, right);
         }
 
         private string BuildSelectorTypeIs(Expression expression)

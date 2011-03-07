@@ -25,11 +25,16 @@ namespace ProjectionSample
             var ctx = new DocumentContext("main");
             ctx.EnsureDatabaseExists();
 
+            for (int i = 0; i < 10000; i++)
+            {
+
+            }
+
 
             var query = (from order in ctx.GetCollection<Order>().AsQueryable().OfType<Order>()
                                             where order.OrderTotal > 0
                                             where order.ShippingDate != null
-                                            where order.ShippingAddress.Line1 != "aa"
+                                            where order.ShippingAddress.Line1 != "aa" && order.ShippingAddress.Line1 != "bb"
                                             where order.ShippingAddress is Address
                                             //select order
                                             select new 
