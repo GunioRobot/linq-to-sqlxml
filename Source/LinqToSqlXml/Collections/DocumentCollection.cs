@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using ServiceStack.Text.Json;
 using System.Data.SqlClient;
+using ServiceStack.Text;
 namespace LinqToSqlXml
 {
     public class DocumentCollectionBase
@@ -89,7 +90,7 @@ namespace LinqToSqlXml
 
         public void Add(string json)
         {
-            var obj = JsonSerializer<T>.Default.DeserializeFromString(json);
+            var obj = TypeSerializer.DeserializeFromString<T>(json);
             this.Add(obj);
         }
 
@@ -119,7 +120,7 @@ namespace LinqToSqlXml
             doc.XmlIndex = DocumentSerializer.Serialize(item);
 
 
-            doc.JsonData = JsonSerializer<T>.Default.SerializeToString(item);
+            doc.JsonData = TypeSerializer.SerializeToString<T>(item);
             doc.CollectionName = collectionName;
             doc.DbName = owner.DbInstance;
 

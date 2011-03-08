@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DocumentCollection.cs" />
-    <Compile Include="Serialization\Json.cs" />
     <Compile Include="Serialization\DocumentId.cs" />
     <Compile Include="DocumentContext.cs" />
     <Compile Include="DocumentDB.designer.cs">

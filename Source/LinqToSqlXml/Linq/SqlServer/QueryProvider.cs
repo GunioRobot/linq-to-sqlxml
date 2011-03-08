@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Xml.Linq;
 using LinqToSqlXml.SqlServer;
 using ServiceStack.Text.Json;
+using ServiceStack.Text;
 namespace LinqToSqlXml
 {
     public class SqlServerQueryProvider : IQueryProvider
@@ -45,7 +46,7 @@ namespace LinqToSqlXml
         {            
             
             return documents
-                .Select(json => JsonSerializer<TResult>.Default.DeserializeFromString(json))
+                .Select(json => TypeSerializer.DeserializeFromString<TResult>(json))
                 .Where(result => result != null);
         }
 
@@ -84,7 +85,7 @@ queryBuilder.orderby);
 
         private static string ToJson<T>(this T self)
         {
-            return JsonSerializer<T>.Default.SerializeToString(self);
+            return TypeSerializer.SerializeToString<T>(self);
         }
     }
 }
