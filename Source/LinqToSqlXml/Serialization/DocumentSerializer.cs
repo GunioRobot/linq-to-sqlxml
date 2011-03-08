@@ -83,7 +83,7 @@ namespace LinqToSqlXml
             PropertyInfo[] properties = itemType.GetProperties();
             foreach (PropertyInfo property in properties)
             {
-                if (!property.IsDefined(typeof(IndexedAttribute),true))
+                if (!(property.IsDefined(typeof(IndexedAttribute),true) || property.DeclaringType.IsDefined(typeof(IndexedAttribute),true)))
                     continue;
 
                 var propertyTag = new XElement(property.Name);

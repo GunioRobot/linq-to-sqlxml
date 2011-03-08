@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LinqToSqlXml
 {
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
     public class IndexedAttribute : Attribute
     {
     }
