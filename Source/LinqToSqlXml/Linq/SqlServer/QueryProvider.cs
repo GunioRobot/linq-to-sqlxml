@@ -40,11 +40,10 @@ namespace LinqToSqlXml
 
         #endregion
 
-        private static IEnumerable<TResult> DocumentEnumerator<TResult>(IEnumerable<ReadDocument> documents)
+        private static IEnumerable<TResult> DocumentEnumerator<TResult>(IEnumerable<string> documents)
         {            
             
             return documents
-                .Select(document => document.Json)
                 .Select(json => JsonSerializer<TResult>.Default.DeserializeFromString(json))
                 .Where(result => result != null);
         }
@@ -66,20 +65,13 @@ queryBuilder.Where,
 queryBuilder.orderby);
 
 
-            IEnumerable<ReadDocument> result = documentCollection.ExecuteQuery(sql);
+            IEnumerable<string> result = documentCollection.ExecuteQuery(sql);
 
             if (typeof(TResult) == typeof(string))
-                return (IEnumerable<TResult>)StringEnumerator(result);
+                return (IEnumerable<TResult>)result;
             else
                 return DocumentEnumerator<TResult>(result);
         }
-
-        private IEnumerable<string> StringEnumerator(IEnumerable<ReadDocument> result)
-        {
-            return result.Select(d => d.Json);
-        }
-
-
     }
 
     public static class QueryableExtensions
@@ -91,7 +83,6 @@ queryBuilder.orderby);
 
         private static string ToJson<T>(this T self)
         {
-            throw new Exception("");
             return JsonSerializer<T>.Default.SerializeToString(self);
         }
     }

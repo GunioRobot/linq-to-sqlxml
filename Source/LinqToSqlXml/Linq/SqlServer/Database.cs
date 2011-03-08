@@ -9,14 +9,9 @@ using System.Collections.Concurrent;
 
 namespace LinqToSqlXml
 {
-    public class ReadDocument
-    {
-        public string Json { get; set; }
-    }
-
     public static class Database
     {
-        public static IEnumerable<ReadDocument> ExecuteReader(SqlConnection conn, string sql)
+        public static IEnumerable<string> ExecuteReader(SqlConnection conn, string sql)
         {
             if (conn.State == System.Data.ConnectionState.Closed)
                 conn.Open();
@@ -25,31 +20,27 @@ namespace LinqToSqlXml
             
             using (var cmd = conn.CreateCommand())
             {
-                var queue = new ConcurrentQueue<ReadDocument>();
+                var queue = new ConcurrentQueue<string>();
                 bool done = false;
                 cmd.CommandText = sql;
-                var result = cmd.BeginExecuteReader(new AsyncCallback( r => 
+                var result = cmd.BeginExecuteReader( r => 
                     {
                         using (SqlDataReader reader = cmd.EndExecuteReader(r))
                         {
                             int count = 0;
                             while (reader.Read())
                             {
-                                var doc = new ReadDocument
-                                {
-                                    Json = reader.GetString(0)
-                                };
-
+                                var doc = reader.GetString(0);
                                 queue.Enqueue(doc);
                                 count++;
                             }
                             done = true;
                         }
-                    }),null);
+                    },null);
                 
                 while (!done || queue.Count >0)
                 {
-                    ReadDocument doc = null;
+                    string doc = null;
                     if (queue.TryDequeue(out doc))
                         yield return doc;
                 }
