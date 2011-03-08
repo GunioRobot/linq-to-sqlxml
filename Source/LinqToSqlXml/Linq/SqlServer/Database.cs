@@ -10,7 +10,6 @@ namespace LinqToSqlXml
 {
     public class ReadDocument
     {
-        public Guid Id { get; set; }
         public string Json { get; set; }
     }
 
@@ -30,8 +29,7 @@ namespace LinqToSqlXml
                     {
                         yield return new ReadDocument()
                         {
-                            Id = reader.GetGuid(0),
-                            Json = reader.GetString(1),
+                            Json = reader.GetString(0),
                         };
                     }
                 }

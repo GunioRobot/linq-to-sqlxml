@@ -31,22 +31,23 @@ namespace ProjectionSample
                 //  where order.OrderDate < DateTime.Now
                 where order.Status == OrderStatus.Shipped
                 select order
-                ).Take(10);
+                );
 
             //touch the db
             var x = query.Take(1).ToList();
 
             Stopwatch sw = new Stopwatch();
+            Console.WriteLine("Starting...");
             sw.Start();
             var result = query.ToList();
             sw.Stop();
 
 
-
-            foreach (var order in result)
-            {
-                Console.WriteLine("{0} {1}", order.OrderTotal, order.OrderDetails.Count());
-            }
+            Console.WriteLine("feteched {0} records", result.Count);
+            //foreach (var order in result)
+            //{
+            //    Console.WriteLine("{0} {1}", order.OrderTotal, order.OrderDetails.Count());
+            //}
 
             Console.WriteLine(sw.Elapsed);
             Console.ReadLine();

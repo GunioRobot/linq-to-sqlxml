@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using LinqToSqlXml.SqlServer;
-
+using ServiceStack.Text.Json;
 namespace LinqToSqlXml
 {
     public class SqlServerQueryProvider : IQueryProvider
@@ -42,9 +42,10 @@ namespace LinqToSqlXml
 
         private static IEnumerable<TResult> DocumentEnumerator<TResult>(IEnumerable<ReadDocument> documents)
         {            
+            
             return documents
                 .Select(document => document.Json)
-                .Select(json => Newtonsoft.Json.JsonConvert.DeserializeObject<TResult>(json))
+                .Select(json => Json<TResult>.serializer.DeserializeFromString(json))
                 .Where(result => result != null);
         }
 
@@ -54,7 +55,7 @@ namespace LinqToSqlXml
             queryBuilder.Visit(expression);
 
             var sql = string.Format(@"
-select {0} Id,JsonData 
+select {0} JsonData 
 from Documents 
 where CollectionName = '{2}' {3} 
 {4}", 

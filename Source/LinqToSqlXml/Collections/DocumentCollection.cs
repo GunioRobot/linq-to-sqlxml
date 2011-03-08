@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
+using ServiceStack.Text.Json;
 namespace LinqToSqlXml
 {
     public class DocumentCollection
@@ -59,7 +59,9 @@ namespace LinqToSqlXml
             var doc = new Document();
             doc.Id = documentId;
             doc.XmlIndex = DocumentSerializer.Serialize(item);
-            doc.JsonData = Newtonsoft.Json.JsonConvert.SerializeObject(item);
+
+
+            doc.JsonData = Json<T>.serializer.SerializeToString(item);
             doc.CollectionName = collectionName;
             doc.DbName = owner.DbInstance;
 
