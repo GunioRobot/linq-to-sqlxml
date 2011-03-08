@@ -20,11 +20,10 @@ namespace LinqToSqlXml
         {
             if (conn.State == System.Data.ConnectionState.Closed)
                 conn.Open();
-
+            
             using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = sql;
-                cmd.Prepare();                
+            {                
+                cmd.CommandText = sql;              
                 using (var reader = cmd.ExecuteReader())
                 {               
                     while (reader.Read())

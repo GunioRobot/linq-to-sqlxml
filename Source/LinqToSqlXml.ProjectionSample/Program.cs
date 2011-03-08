@@ -28,17 +28,19 @@ namespace ProjectionSample
             var query = (
                 from order in ctx.GetCollection<Order>().AsQueryable()
                 where order.OrderTotal > 0
-                //where order.OrderDate < DateTime.Now
-                //where order.Status == OrderStatus.Shipped
+                //  where order.OrderDate < DateTime.Now
+                where order.Status == OrderStatus.Shipped
                 select order
-                ).Take(400);
+                ).Take(10);
 
-            var x = query.ToList();
+            //touch the db
+            var x = query.Take(1).ToList();
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
             var result = query.ToList();
             sw.Stop();
-            
+
 
 
             foreach (var order in result)
@@ -73,7 +75,7 @@ namespace ProjectionSample
                                            CustomerId = Guid.NewGuid(),
                                            OrderDate = DateTime.Now,
                                            ShippingDate = DateTime.Now,
-                                           OrderDetails = new List<OrderDetail>()                                                              ,
+                                           OrderDetails = new List<OrderDetail>() ,
                                            ShippingAddress = new Address
                                                                  {
                                                                      City = "a",
@@ -82,7 +84,7 @@ namespace ProjectionSample
                                                                  },
                                            Status = OrderStatus.Shipped,
                                        };
-                for (int j = 0; j < i / 10; j++)
+                for (int j = 0; j < 1; j++)
                 {
                     someOrder.OrderDetails.Add(new OrderDetail
                     {
