@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ServiceStack.Text.Json;
+using System.Data.SqlClient;
 namespace LinqToSqlXml
 {
     public class DocumentCollection
@@ -18,7 +19,7 @@ namespace LinqToSqlXml
 
         internal IEnumerable<ReadDocument> ExecuteQuery(string query)
         {
-            return Database.ExecuteReader(this.owner.DB.Connection,query);
+            return Database.ExecuteReader(this.owner.DB.Connection as SqlConnection,query);
         }
     }
 
@@ -61,7 +62,7 @@ namespace LinqToSqlXml
             doc.XmlIndex = DocumentSerializer.Serialize(item);
 
 
-            doc.JsonData = Json<T>.serializer.SerializeToString(item);
+            doc.JsonData = JsonSerializer<T>.Default.SerializeToString(item);
             doc.CollectionName = collectionName;
             doc.DbName = owner.DbInstance;
 

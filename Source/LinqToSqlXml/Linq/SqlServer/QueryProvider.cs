@@ -45,7 +45,7 @@ namespace LinqToSqlXml
             
             return documents
                 .Select(document => document.Json)
-                .Select(json => Json<TResult>.serializer.DeserializeFromString(json))
+                .Select(json => JsonSerializer<TResult>.Default.DeserializeFromString(json))
                 .Where(result => result != null);
         }
 

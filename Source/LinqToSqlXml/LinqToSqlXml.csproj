@@ -51,8 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DocumentCollection.cs" />
-    <Compile Include="Collections\Json.cs" />
-    <Compile Include="DocumentId.cs" />
+    <Compile Include="Serialization\Json.cs" />
+    <Compile Include="Serialization\DocumentId.cs" />
     <Compile Include="DocumentContext.cs" />
     <Compile Include="DocumentDB.designer.cs">
       <AutoGen>True</AutoGen>
