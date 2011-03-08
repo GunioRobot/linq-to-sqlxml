@@ -44,6 +44,8 @@ namespace LinqToSqlXml.SqlServer
 
         public static string BuildLiteral(object value)
         {
+            if (value is Guid)
+                return "\"" + SerializeString(value.ToString()) + "\"";
             if (value is string)
                 return "\"" + SerializeString((string)value) + "\"";
             if (value is int)

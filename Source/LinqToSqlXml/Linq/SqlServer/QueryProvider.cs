@@ -9,9 +9,9 @@ namespace LinqToSqlXml
 {
     public class SqlServerQueryProvider : IQueryProvider
     {
-        private readonly DocumentCollection documentCollection;
+        private readonly DocumentCollectionBase documentCollection;
 
-        public SqlServerQueryProvider(DocumentCollection documentCollection)
+        public SqlServerQueryProvider(DocumentCollectionBase documentCollection)
         {
             this.documentCollection = documentCollection;
         }

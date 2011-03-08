@@ -27,6 +27,11 @@
             db.Connection.Open();
         }
 
+        public DocumentCollection GetCollection(string collectionName)
+        {
+            return new DocumentCollection(this, collectionName);
+        }
+
         public DocumentCollection<T> GetCollection<T>() where T : class
         {
             return new DocumentCollection<T>(this);

@@ -97,7 +97,7 @@ namespace LinqToSqlXml
         private static void SerializeCollection(object value, XElement ownerTag)
         {
             ownerTag.Add(new XAttribute(ns+"type", "collection"));
-            foreach (object childValue in (IList)value)
+            foreach (object childValue in (IEnumerable)value)
             {
                 var collectionElement = new XElement("element");
                 Serialize(childValue, collectionElement);

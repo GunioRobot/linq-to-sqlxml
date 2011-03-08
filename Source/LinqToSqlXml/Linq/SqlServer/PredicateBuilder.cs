@@ -217,6 +217,14 @@ namespace LinqToSqlXml.SqlServer
                 if (memberExpression.Member.DeclaringType == typeof(DateTime))
                     return XQueryMapping.BuildLiteral(DateTime.Now);    
 
+                if (memberExpression.Expression.Type.Name.StartsWith("<>"))
+                {
+                    var c = memberExpression.Expression as ConstantExpression;
+                    var h = c.Value;
+                    var result = h.GetType().GetFields().First().GetValue(h);
+                    return XQueryMapping.BuildLiteral(result);
+                }
+
                 return ".";
             }
 
@@ -246,7 +254,11 @@ namespace LinqToSqlXml.SqlServer
             if (expression is MemberExpression)
             {
                 var memberExpression = expression as MemberExpression;
+
                 if (memberExpression.Member.DeclaringType == typeof(DateTime))
+                    return true;
+
+                if (memberExpression.Expression.Type.Name.StartsWith("<>"))
                     return true;
 
                 string currentPropertyPath = GetPropertyPath(expression);
@@ -314,7 +326,7 @@ namespace LinqToSqlXml.SqlServer
             if (memberExpression.Type == typeof(bool)|| memberExpression.Type == typeof(bool?)) 
                 current += "/x:bool";
 
-            if (memberExpression.Type == typeof(string) )
+            if (memberExpression.Type == typeof(string) || memberExpression.Type == typeof(Guid))
                 current += "/x:str";
 
             if (memberExpression.Type == typeof(DateTime) || memberExpression.Type == typeof(DateTime?)) 

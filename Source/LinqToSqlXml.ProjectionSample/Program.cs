@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LinqToSqlXml;
 using System.Diagnostics;
+using System.Dynamic;
 
 namespace ProjectionSample
 {
@@ -24,6 +25,16 @@ namespace ProjectionSample
         {
             var ctx = new DocumentContext("main");
             ctx.EnsureDatabaseExists();
+
+            //var untyped = ctx.GetCollection("Customer");
+            //dynamic c = new ExpandoObject();
+            //c.Name = "Dynamic";
+            //c.Address = new Address { Line1 = "a", ZipCode = "123", City = "b" };
+            //c.Id = Guid.NewGuid();
+
+            //untyped.Add(c);
+
+
 
             var query = (
                 from order in ctx.GetCollection<Order>().AsQueryable()
