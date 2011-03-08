@@ -59,11 +59,20 @@ namespace LinqToSqlXml
                 copy.ColumnMappings.Add(2, 2);
                 copy.ColumnMappings.Add(3, 3);
                 copy.ColumnMappings.Add(4, 4);
+                copy.SqlRowsCopied += new SqlRowsCopiedEventHandler(copy_SqlRowsCopied);
+                copy.NotifyAfter = 100;
+                copy.BatchSize = 1000;
                 copy.DestinationTableName = "Documents";
 
                 copy.WriteToServer(insertedDocuments);
             }
+            insertedDocuments.Clear();
             //db.SubmitChanges();
+        }
+
+        void copy_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
+        {
+        //    Console.Write(".");
         }
 
         
