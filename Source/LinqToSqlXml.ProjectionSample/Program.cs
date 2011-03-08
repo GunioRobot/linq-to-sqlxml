@@ -26,15 +26,16 @@ namespace ProjectionSample
             var ctx = new DocumentContext("main");
             ctx.EnsureDatabaseExists();
 
-            //var untyped = ctx.GetCollection("Customer");
-            //dynamic c = new ExpandoObject();
-            //c.Name = "Dynamic";
-            //c.Address = new Address { Line1 = "a", ZipCode = "123", City = "b" };
-            //c.Id = Guid.NewGuid();
+            var untyped = ctx.GetCollection("Customer");
+            dynamic c = new ExpandoObject();
+            c.Name = "Dynamic";
+            c.Address = new Address { Line1 = "a", ZipCode = "123", City = "b" };
+            c.Id = Guid.NewGuid();
 
-            //untyped.Add(c);
+            untyped.Add(c);
 
 
+            
 
             var query = (
                 from order in ctx.GetCollection<Order>().AsQueryable()

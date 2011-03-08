@@ -56,6 +56,9 @@ namespace LinqToSqlXml.SqlServer
                     case "Select":
                       //  documentDataSelector = selectorBuilder.TranslateToProjection(node);
                         break;
+                    case "First":
+                        limit = string.Format("top 1");
+                        break;
                     default:
                         throw new NotSupportedException(string.Format("Method {0} is not yet supported",
                                                                       node.Method.Name));

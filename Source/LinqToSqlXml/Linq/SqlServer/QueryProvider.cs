@@ -30,7 +30,8 @@ namespace LinqToSqlXml
 
         public TResult Execute<TResult>(Expression expression)
         {
-            return default(TResult);
+            var result = this.ExecuteQuery<TResult>(expression);
+            return result.ToList().First();
         }
 
         public object Execute(Expression expression)

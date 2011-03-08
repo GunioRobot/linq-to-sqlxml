@@ -39,6 +39,9 @@ namespace LinqToSqlXml
 
         public void Add(object item)
         {
+            
+            
+
             Guid documentId;
 
             PropertyInfo idproperty = item.GetType().GetDocumentIdProperty();
