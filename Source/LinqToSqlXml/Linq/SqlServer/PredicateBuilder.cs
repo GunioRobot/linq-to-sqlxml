@@ -102,8 +102,8 @@ namespace LinqToSqlXml.SqlServer
             var lambda = methodCallExpression.Arguments[1] as LambdaExpression;
             Expression body = lambda.Body;
             string part = BuildPredicate(body);
-            string propertyPath = BuildPredicate(methodCallExpression.Arguments[0]);
-            string predicate = string.Format("{0}[{1}]", propertyPath, part);
+            string propertyPath = GetPropertyPath(methodCallExpression.Arguments[0]);
+            string predicate = string.Format("{0}/element[{1}]", propertyPath, part);
             return predicate;
         }
 

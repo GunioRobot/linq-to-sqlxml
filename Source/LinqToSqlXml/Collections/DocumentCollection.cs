@@ -123,7 +123,8 @@ namespace LinqToSqlXml
             doc.CollectionName = collectionName;
             doc.DbName = owner.DbInstance;
 
-            owner.DB.Documents.InsertOnSubmit(doc);
+            owner.InsertDocument(doc.Id, this.collectionName, doc.XmlIndex.ToString(), doc.JsonData);
+          //  owner.DB.Documents.InsertOnSubmit(doc);
         }
 
         public IQueryable<T> AsQueryable()

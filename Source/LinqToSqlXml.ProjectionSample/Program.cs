@@ -26,48 +26,51 @@ namespace ProjectionSample
             var ctx = new DocumentContext("main");
             ctx.EnsureDatabaseExists();
 
-            var untyped = ctx.GetCollection("Customer");
-            dynamic c = new ExpandoObject();
-            c.Name = "Dynamic";
-            c.Address = new Address { Line1 = "a", ZipCode = "123", City = "b" };
-            c.Id = Guid.NewGuid();
+            //var untyped = ctx.GetCollection("Customer");
+            //dynamic c = new ExpandoObject();
+            //c.Name = "Dynamic";
+            //c.Address = new Address { Line1 = "a", ZipCode = "123", City = "b" };
+            //c.Id = Guid.NewGuid();
 
-            untyped.Add(c);
+            //untyped.Add(c);
 
 
             
 
-            var query = (
-                from order in ctx.GetCollection<Order>().AsQueryable()
-                where order.OrderTotal > 0
-                //  where order.OrderDate < DateTime.Now
-                where order.Status == OrderStatus.Shipped
-                select order
-                );
+            //var query = (
+            //    from order in ctx.GetCollection<Order>().AsQueryable()
+            //    where order.OrderTotal > 0
+            //    //  where order.OrderDate < DateTime.Now
+            //    where order.Status == OrderStatus.Shipped
+            //    select order
+            //    );
 
-            //touch the db
-            var x = query.Take(1).ToList();
+            ////touch the db
+            //var x = query.Take(1).ToList();
+
+            //Stopwatch sw = new Stopwatch();
+            //Console.WriteLine("Starting...");
+            //sw.Start();
+            //var result = query.ToList();
+            //sw.Stop();
+
+
+            //Console.WriteLine("feteched {0} records", result.Count);
+            ////foreach (var order in result)
+            ////{
+            ////    Console.WriteLine("{0}", order);
+            ////}
+
+            //Console.WriteLine(sw.Elapsed);
+            //Console.ReadLine();
+            //return;
 
             Stopwatch sw = new Stopwatch();
             Console.WriteLine("Starting...");
             sw.Start();
-            var result = query.ToList();
-            sw.Stop();
-
-
-            Console.WriteLine("feteched {0} records", result.Count);
-            //foreach (var order in result)
-            //{
-            //    Console.WriteLine("{0}", order);
-            //}
-
-            Console.WriteLine(sw.Elapsed);
-            Console.ReadLine();
-            return;
-
             for (int i = 0; i < 5000; i++)
             {
-                Console.WriteLine(i);
+                //Console.WriteLine(i);
                 var someCompany = new Customer
                                   {
                                       Address = new Address
@@ -83,54 +86,58 @@ namespace ProjectionSample
 
                 ctx.GetCollection<Customer>().Add(someCompany);
 
-                var someOrder = new Order
-                                       {
-                                           CustomerId = Guid.NewGuid(),
-                                           OrderDate = DateTime.Now,
-                                           ShippingDate = DateTime.Now,
-                                           OrderDetails = new List<OrderDetail>() ,
-                                           ShippingAddress = new Address
-                                                                 {
-                                                                     City = "a",
-                                                                     Line1 = "b",
-                                                                     ZipCode = "c"
-                                                                 },
-                                           Status = OrderStatus.Shipped,
-                                       };
-                for (int j = 0; j < 1; j++)
-                {
-                    someOrder.OrderDetails.Add(new OrderDetail
-                    {
-                        ItemPrice = i,
-                        ProductNo = "x" + i,
-                        Quantity = i,
-                    });
-                }
-
-                ctx.GetCollection<Order>().Add(someOrder);
-                //var result = DocumentSerializer.Serialize(specialOrder);
-                //Console.WriteLine(result.ToString());
-                //ctx.GetCollection<Order>().Add(specialOrder);
-                //ctx.SaveChanges();
-                //var des = DocumentDeserializer.Deserialize(result);
-
-
-
-
-
-
-                //    var address = new Address()
-                //                      {
-                //                          City = "Örebro",
-                //                          Line1 = "blabla",
-                //                          ZipCode = "" + i ,
-                //                      };
-
-                //    ctx.GetCollection<Address>().Add(address);
+                //var someOrder = new Order
+                //                       {
+                //                           CustomerId = Guid.NewGuid(),
+                //                           OrderDate = DateTime.Now,
+                //                           ShippingDate = DateTime.Now,
+                //                           OrderDetails = new List<OrderDetail>() ,
+                //                           ShippingAddress = new Address
+                //                                                 {
+                //                                                     City = "a",
+                //                                                     Line1 = "b",
+                //                                                     ZipCode = "c"
+                //                                                 },
+                //                           Status = OrderStatus.Shipped,
+                //                       };
+                //for (int j = 0; j < 1; j++)
+                //{
+                //    someOrder.OrderDetails.Add(new OrderDetail
+                //    {
+                //        ItemPrice = i,
+                //        ProductNo = "x" + i,
+                //        Quantity = i,
+                //    });
                 //}
+
+                //ctx.GetCollection<Order>().Add(someOrder);
+                ////var result = DocumentSerializer.Serialize(specialOrder);
+                ////Console.WriteLine(result.ToString());
+                ////ctx.GetCollection<Order>().Add(specialOrder);
+                ////ctx.SaveChanges();
+                ////var des = DocumentDeserializer.Deserialize(result);
+
+
+
+
+
+
+                ////    var address = new Address()
+                ////                      {
+                ////                          City = "Örebro",
+                ////                          Line1 = "blabla",
+                ////                          ZipCode = "" + i ,
+                ////                      };
+
+                ////    ctx.GetCollection<Address>().Add(address);
+                ////}
                 
             }
+            Console.WriteLine(sw.Elapsed);
             ctx.SaveChanges();
+            Console.WriteLine(sw.Elapsed);
+
+            Console.Read();
         //    Console.ReadLine();
         }
     }

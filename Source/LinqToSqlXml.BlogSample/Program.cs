@@ -17,7 +17,7 @@ namespace BlogSample
             //                       Topic = "fsdfs world",
             //                   };
 
-            //blogpost.ReplyTo("Hej hej", "gdfgdf");
+            //blogpost.ReplyTo("Hej hej", "Roggan");
             //blogpost.AddTag("NoSql");
             //Console.WriteLine(blogpost.Id);
             //ctx.GetCollection<BlogPost>().Add(blogpost);
@@ -27,7 +27,7 @@ namespace BlogSample
 
             IQueryable<BlogPost> query = from blogpost in ctx.GetCollection<BlogPost>().AsQueryable()
                                          where
-                                             blogpost.Comments.Any(c => c.UserName == "roger") &&
+                                             blogpost.Comments.Any(c => c.UserName == "Roggan") &&
                                              blogpost.CommentCount == 1
                                          select blogpost;
 
@@ -50,12 +50,16 @@ namespace BlogSample
         }
 
         [DocumentId]
+        [Indexed]
         public Guid Id { get; set; }
 
         public string Topic { get; set; }
         public string Body { get; set; }
+
+        [Indexed]
         public ICollection<Comment> Comments { get; set; }
 
+        [Indexed]
         public int CommentCount
         {
             get { return Comments.Count; }
@@ -74,7 +78,9 @@ namespace BlogSample
 
     public class Comment
     {
+        [Indexed]
         public string Body { get; set; }
+        [Indexed]
         public string UserName { get; set; }
     }
 }

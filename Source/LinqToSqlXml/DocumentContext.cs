@@ -1,13 +1,23 @@
-﻿namespace LinqToSqlXml
+﻿using System.Data;
+using System;
+using System.Data.SqlClient;
+namespace LinqToSqlXml
 {
     public class DocumentContext
     {
         private readonly DocumentDataContext db = new DocumentDataContext();
         private readonly string dbInstance;
+        private readonly DataTable insertedDocuments;
 
         public DocumentContext(string dbInstance)
         {
             this.dbInstance = dbInstance;
+            insertedDocuments = new DataTable();
+            insertedDocuments.Columns.Add("Id", typeof(Guid));
+            insertedDocuments.Columns.Add("DbName",typeof(string));
+            insertedDocuments.Columns.Add("CollectionName",typeof(string));
+            insertedDocuments.Columns.Add("XmlIndex",typeof(string));
+            insertedDocuments.Columns.Add("JsonData",typeof(string));
         }
 
         public string DbInstance
@@ -39,7 +49,27 @@
 
         public void SaveChanges()
         {
-            db.SubmitChanges();
+            if (db.Connection.State == ConnectionState.Closed)
+                db.Connection.Open();
+
+            using (SqlBulkCopy copy = new SqlBulkCopy(db.Connection as SqlConnection))
+            {
+                copy.ColumnMappings.Add(0, 0);
+                copy.ColumnMappings.Add(1, 1);
+                copy.ColumnMappings.Add(2, 2);
+                copy.ColumnMappings.Add(3, 3);
+                copy.ColumnMappings.Add(4, 4);
+                copy.DestinationTableName = "Documents";
+
+                copy.WriteToServer(insertedDocuments);
+            }
+            //db.SubmitChanges();
+        }
+
+        
+        public void InsertDocument(Guid id, string collectionName, string xmlIndex, string json)
+        {
+            insertedDocuments.Rows.Add(id, dbInstance, collectionName, xmlIndex, json);
         }
     }
 }
