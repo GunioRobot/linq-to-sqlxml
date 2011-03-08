@@ -67,7 +67,32 @@ queryBuilder.orderby);
 
 
             IEnumerable<ReadDocument> result = documentCollection.ExecuteQuery(sql);
-            return DocumentEnumerator<TResult>(result);
+
+            if (typeof(TResult) == typeof(string))
+                return (IEnumerable<TResult>)StringEnumerator(result);
+            else
+                return DocumentEnumerator<TResult>(result);
+        }
+
+        private IEnumerable<string> StringEnumerator(IEnumerable<ReadDocument> result)
+        {
+            return result.Select(d => d.Json);
+        }
+
+
+    }
+
+    public static class QueryableExtensions
+    {
+        public static IQueryable<string> AsJson<T>(this IQueryable<T> self)
+        {
+            return self.Select(i => i.ToJson());
+        }
+
+        private static string ToJson<T>(this T self)
+        {
+            throw new Exception("");
+            return JsonSerializer<T>.Default.SerializeToString(self);
         }
     }
 }

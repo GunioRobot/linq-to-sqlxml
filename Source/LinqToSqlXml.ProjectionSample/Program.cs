@@ -46,7 +46,7 @@ namespace ProjectionSample
             Console.WriteLine("feteched {0} records", result.Count);
             //foreach (var order in result)
             //{
-            //    Console.WriteLine("{0} {1}", order.OrderTotal, order.OrderDetails.Count());
+            //    Console.WriteLine("{0}", order);
             //}
 
             Console.WriteLine(sw.Elapsed);
