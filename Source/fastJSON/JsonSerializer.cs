@@ -12,11 +12,12 @@ namespace fastJSON
 	internal class JSONSerializer
 	{
 		private readonly StringBuilder _output = new StringBuilder();
-		
-		public static string ToJSON(object obj)
-		{
-			return new JSONSerializer().ConvertToJSON(obj);
-		}
+        private JSON owner;
+
+        public JSONSerializer(JSON jSON)
+        {
+            this.owner = jSON;
+        }
 
 		internal string ConvertToJSON(object obj)
 		{
@@ -44,7 +45,7 @@ namespace fastJSON
 				_output.Append(Convert.ToString(obj,NumberFormatInfo.InvariantInfo));
 			
 			else if (obj is bool)
-				_output.Append(obj.ToString().ToLower()); // conform to standard
+				_output.Append(obj.ToString().ToLowerInvariant()); // conform to standard
 			
 			else if (obj is char || obj is Enum || obj is Guid || obj is string)
 				WriteString(obj.ToString());
@@ -132,7 +133,12 @@ namespace fastJSON
 		{
 			_output.Append("{");
 			Type  t = obj.GetType();
-			WritePair("$type", t.SerializedName());
+
+            var typeName = owner.OnResolveTypeName(t);
+            if (typeName == null)
+                typeName = t.SerializedName();
+
+			WritePair("$type", typeName);
 			_output.Append(",");
 
 			List<Getters> g = JSON.Instance.GetGetters(t);

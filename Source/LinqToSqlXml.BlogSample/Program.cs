@@ -25,7 +25,7 @@ namespace BlogSample
                 ctx.SaveChanges();
                 Console.Read();
             }
-            IQueryable<BlogPost> query = from blogpost in ctx.GetCollection<BlogPost>().AsQueryable()
+            var query = from blogpost in ctx.GetCollection<BlogPost>().AsQueryable()
                                          where
                                              blogpost.Comments.Any(c => c.UserName == "Roggan") &&
                                              blogpost.CommentCount > 0

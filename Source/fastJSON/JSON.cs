@@ -9,8 +9,30 @@ using System.IO;
 
 namespace fastJSON
 {
+    public delegate Type TypeResolver(string typeName);
+    public delegate string TypeNameResolver(Type type);
+
 	public class JSON
 	{
+        public event TypeResolver ResolveType;
+        public event TypeNameResolver ResolveTypeName;
+
+        protected internal Type OnResolveType(string typeName)
+        {
+            if (ResolveType != null)
+                return ResolveType(typeName);
+
+            return null;
+        }
+
+        protected internal string OnResolveTypeName(Type type)
+        {
+            if (ResolveTypeName != null)
+                return ResolveTypeName(type);
+
+            return null;
+        }
+
 		public readonly static JSON Instance = new JSON();
 		private JSON()
 		{
@@ -19,7 +41,7 @@ namespace fastJSON
 		
 		public string ToJSON(object obj)
 		{
-			return new JSONSerializer().ConvertToJSON(obj);
+			return new JSONSerializer(this).ConvertToJSON(obj);
 		}
 
 		public object ToObject(string json)
@@ -34,11 +56,18 @@ namespace fastJSON
 		SafeDictionary<string, Type> _typecache = new SafeDictionary<string, Type>();
 		private Type GetTypeFromCache(string typename)
 		{
-			if (_typecache.ContainsKey(typename))
-				return _typecache[typename];
+            Type type = null;
+			if (_typecache.TryGetValue(typename,out type))
+				return type;
 			else
 			{
-				Type t = Type.GetType(typename);
+                Type t = OnResolveType(typename);
+
+                if (t == null)
+                    t = Type.GetType(typename);
+                else
+                    throw new ArgumentException(string.Format("Can not resolve type '{0}'", typename), "typename");
+
 				_typecache.Add(typename, t);
 				return t;
 			}
