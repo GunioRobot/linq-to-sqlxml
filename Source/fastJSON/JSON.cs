@@ -322,7 +322,7 @@ namespace fastJSON
 			}
             
 			
-			return Convert.ChangeType(value, conversionType,System.Globalization.CultureInfo.InstalledUICulture);
+			return Convert.ChangeType(value, conversionType,System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		private Hashtable CreateHashtable(ArrayList reader)
