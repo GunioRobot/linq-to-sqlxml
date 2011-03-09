@@ -28,7 +28,7 @@ namespace BlogSample
             IQueryable<BlogPost> query = from blogpost in ctx.GetCollection<BlogPost>().AsQueryable()
                                          where
                                              blogpost.Comments.Any(c => c.UserName == "Roggan") &&
-                                             blogpost.CommentCount == 1
+                                             blogpost.Comments.Count() > 0
                                          select blogpost;
 
             List<BlogPost> result = query.ToList();

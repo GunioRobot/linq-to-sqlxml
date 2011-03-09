@@ -40,9 +40,6 @@ namespace LinqToSqlXml
 
         public void Add(object item)
         {
-            
-            
-
             Guid documentId;
 
             PropertyInfo idproperty = item.GetType().GetDocumentIdProperty();
@@ -90,7 +87,7 @@ namespace LinqToSqlXml
 
         public void Add(string json)
         {
-            var obj = TypeSerializer.DeserializeFromString<T>(json);
+            var obj = JsonSerializer.DeserializeFromString<T>(json);
             this.Add(obj);
         }
 
@@ -115,17 +112,18 @@ namespace LinqToSqlXml
                 documentId = Guid.NewGuid();
             }
 
+            
+
             var doc = new Document();
             doc.Id = documentId;
             doc.XmlIndex = DocumentSerializer.Serialize(item);
 
 
-            doc.JsonData = TypeSerializer.SerializeToString<T>(item);
+            doc.JsonData = JsonSerializer.SerializeToString<T>(item);
             doc.CollectionName = collectionName;
             doc.DbName = owner.DbInstance;
 
-            owner.InsertDocument(doc.Id, this.collectionName, doc.XmlIndex.ToString(), doc.JsonData);
-          //  owner.DB.Documents.InsertOnSubmit(doc);
+            owner.InsertOnSubmit(doc.Id, this.collectionName, doc.XmlIndex.ToString(), doc.JsonData);
         }
 
         public IQueryable<T> AsQueryable()

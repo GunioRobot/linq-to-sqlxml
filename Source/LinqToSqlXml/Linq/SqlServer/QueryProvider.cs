@@ -46,7 +46,7 @@ namespace LinqToSqlXml
         {            
             
             return documents
-                .Select(json => TypeSerializer.DeserializeFromString<TResult>(json))
+                .Select(json => JsonSerializer.DeserializeFromString<TResult>(json))
                 .Where(result => result != null);
         }
 
@@ -85,7 +85,7 @@ queryBuilder.orderby);
 
         private static string ToJson<T>(this T self)
         {
-            return TypeSerializer.SerializeToString<T>(self);
+            return JsonSerializer.SerializeToString<T>(self);
         }
     }
 }

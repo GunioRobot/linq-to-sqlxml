@@ -82,6 +82,8 @@ namespace LinqToSqlXml.SqlServer
                 {
                     case "Any":
                         return BuildAnyPredicate(methodCallExpression);
+                    case "Count":
+                        return BuildCountPredicate(methodCallExpression);
                     case "Sum":
                     case "Min":
                     case "Max":
@@ -94,6 +96,13 @@ namespace LinqToSqlXml.SqlServer
             }
 
             throw new NotSupportedException("Unknown method");
+        }
+
+        private string BuildCountPredicate(MethodCallExpression methodCallExpression)
+        {
+            string propertyPath = GetPropertyPath(methodCallExpression.Arguments[0]);
+            string predicate = string.Format("fn:count({0})", propertyPath);
+            return predicate;
         }
 
         private string BuildAnyPredicate(MethodCallExpression methodCallExpression)

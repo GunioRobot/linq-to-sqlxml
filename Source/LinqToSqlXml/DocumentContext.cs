@@ -76,7 +76,7 @@ namespace LinqToSqlXml
         }
 
         
-        public void InsertDocument(Guid id, string collectionName, string xmlIndex, string json)
+        public void InsertOnSubmit(Guid id, string collectionName, string xmlIndex, string json)
         {
             insertedDocuments.Rows.Add(id, dbInstance, collectionName, xmlIndex, json);
         }
