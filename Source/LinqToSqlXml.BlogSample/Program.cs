@@ -10,25 +10,25 @@ namespace BlogSample
         private static void Main(string[] args)
         {
             var ctx = new DocumentContext("main");
+            {
+                var blogpost = new BlogPost()
+                                   {
+                                       Body = "gdfg",
+                                       Topic = "fsdfs world",
+                                   };
 
-            //var blogpost = new BlogPost()
-            //                   {
-            //                       Body = "gdfg",
-            //                       Topic = "fsdfs world",
-            //                   };
+                blogpost.ReplyTo("Hej hej", "Roggan");
+                blogpost.AddTag("NoSql");
+                Console.WriteLine(blogpost.Id);
+                ctx.GetCollection<BlogPost>().Add(blogpost);
 
-            //blogpost.ReplyTo("Hej hej", "Roggan");
-            //blogpost.AddTag("NoSql");
-            //Console.WriteLine(blogpost.Id);
-            //ctx.GetCollection<BlogPost>().Add(blogpost);
-
-            //ctx.SaveChanges();
-            //Console.Read();
-
+                ctx.SaveChanges();
+                Console.Read();
+            }
             IQueryable<BlogPost> query = from blogpost in ctx.GetCollection<BlogPost>().AsQueryable()
                                          where
                                              blogpost.Comments.Any(c => c.UserName == "Roggan") &&
-                                             blogpost.Comments.Count() > 0
+                                             blogpost.CommentCount > 0
                                          select blogpost;
 
             List<BlogPost> result = query.ToList();

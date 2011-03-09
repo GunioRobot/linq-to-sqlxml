@@ -4,8 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using LinqToSqlXml.SqlServer;
-using ServiceStack.Text.Json;
-using ServiceStack.Text;
 namespace LinqToSqlXml
 {
     public class SqlServerQueryProvider : IQueryProvider
@@ -46,7 +44,7 @@ namespace LinqToSqlXml
         {            
             
             return documents
-                .Select(json => JsonSerializer.DeserializeFromString<TResult>(json))
+                .Select(json => Json.Deserialize<TResult>(json))
                 .Where(result => result != null);
         }
 
@@ -85,7 +83,7 @@ queryBuilder.orderby);
 
         private static string ToJson<T>(this T self)
         {
-            return JsonSerializer.SerializeToString<T>(self);
+            return Json.Serialize(self);
         }
     }
 }
